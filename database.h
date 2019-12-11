@@ -2,8 +2,12 @@
 #define DATABASE_H
 
 #include <QObject>
-#include <QtSql/QSqlDatabase>
-#include <QtSql/QSqlQuery>
+#include <QSql>
+#include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QVariant>
+#include <QDebug>
+#include <QSqlError>
 
 class database : public QObject
 {
@@ -13,6 +17,9 @@ class database : public QObject
 
 public:
     explicit database(QObject *parent = nullptr);
+
+public slots:
+    void newMessage(const qintptr descriptor, const QString & message);
 };
 
 #endif // DATABASE_H

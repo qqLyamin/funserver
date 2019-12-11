@@ -6,6 +6,9 @@ Server::Server()
     qserver = new QTcpServer(this);
     connect(qserver, &QTcpServer::newConnection, this, &Server::newUser);
 
+    db = new database(this);
+    connect(this, &Server::newMessage, db, &database::newMessage);
+
     if (!qserver->listen(QHostAddress::Any, 17888)) {
         qDebug() << QObject::tr("Unable to start the server: %1.").arg(qserver->errorString());
         status = DEAD;
@@ -32,27 +35,28 @@ void Server::slotReadyRead()
     QTcpSocket* clientSocket = static_cast<QTcpSocket*>(sender());
     qintptr idUserSock = clientSocket->socketDescriptor();
 
-    QTextStream os(clientSocket);
-    os.setAutoDetectUnicode(true);
-    os << "HTTP/1.0 200 Ok\r\n"
-          "Content-Type: text/html; charset=\"utf-8\"\r\n"
-          "\r\n"
-          "<h1>Nothing to see here</h1>\n"
-          << QDateTime::currentDateTime().toString() << "\n";
+//    QTextStream os(clientSocket);
+//    os.setAutoDetectUnicode(true);
+//    os << "HTTP/1.0 200 Ok\r\n"
+//          "Content-Type: text/html; charset=\"utf-8\"\r\n"
+//          "\r\n"
+//          "<h1>Nothing to see here</h1>\n"
+//          << QDateTime::currentDateTime().toString() << "\n";
     // Полученные данные от клиента выведем в qDebug,
     // можно разобрать данные например от GET запроса и по условию выдавать необходимый ответ.
     QString tmp = QString(clientSocket->readAll());
     qDebug() << tmp +"\n\r";
 
-    if (tmp == "goodbuy") {
-        clientSocket->write("NY I POSHEL NAHUI!");
+    emit newMessage(idUserSock, tmp);
+
+    if (tmp == "goodbye") {
+        clientSocket->write("Pokeda, na svyazi");
         clientSocket->close();
         SClients.remove(idUserSock);
+        qDebug() << "NAS POKINYLI";
     } else {
-        clientSocket->write("NY ZDAROVA EBAT'!");
+        clientSocket->write("NY ZDAROVA !");
     }
-
-
 }
 
 void Server::forceClose()

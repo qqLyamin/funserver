@@ -33,6 +33,9 @@ public slots:
 
 private slots:
     void forceClose();
+
+signals:
+    void newMessage(const qintptr descriptor, const QString & message);
 };
 
 #endif // SERVER_H
