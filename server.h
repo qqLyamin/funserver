@@ -23,6 +23,7 @@ class Server : public QTcpServer
     QMap<qintptr, QTcpSocket *> SClients;
 
     serverStatus status;
+    bool authorization = false;
 
 public:
     Server();
@@ -33,8 +34,13 @@ public slots:
 
 private slots:
     void forceClose();
+    void disconnectUser();
+    void authorizationSuccess();
+    void authorizationException();
 
 signals:
+    void checkUser(const QStringList &);
+    void registrate(const QStringList &);
     void newMessage(const qintptr descriptor, const QString & message);
 };
 

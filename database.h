@@ -19,7 +19,13 @@ public:
     explicit database(QObject *parent = nullptr);
 
 public slots:
+    void checkUser(const QStringList &);
+    void registrate(const QStringList &);
     void newMessage(const qintptr descriptor, const QString & message);
+
+signals:
+    void authorizationSuccess();
+    void authorizationException();
 };
 
 #endif // DATABASE_H
