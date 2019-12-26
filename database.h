@@ -20,12 +20,14 @@ public:
 
 public slots:
     void checkUser(const QStringList &);
-    void registrate(const QStringList &);
-    void newMessage(const qintptr descriptor, const QString & message);
+    void registrate(const QStringList &, qint64);
+    void newMessage(const qint64 descriptor, const QString & message);
 
 signals:
     void authorizationSuccess();
     void authorizationException();
+    void reg_false(qint64);
+    void reg_true(qint64);
 };
 
 #endif // DATABASE_H

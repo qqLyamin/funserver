@@ -55,7 +55,7 @@ void database::checkUser(const QStringList & name_pw)
     }
 }
 
-void database::registrate(const QStringList & name_pw)
+void database::registrate(const QStringList & name_pw, qint64 socketDescriptor)
 {
     QSqlQuery query;
     query.prepare( "INSERT INTO users (name, password) VALUES (:name, :password)" );
@@ -65,15 +65,18 @@ void database::registrate(const QStringList & name_pw)
     if (db.isOpen()) {
         if (query.exec()) {
             qDebug() << "added client " << name_pw[0] << " with password " << name_pw[1] << endl;
+            emit reg_true(socketDescriptor);
         } else {
             qWarning() << "exec problem" << query.lastError().text();
+            emit reg_false(socketDescriptor);
         }
     } else {
         qWarning() << "db is closed";
+        emit reg_false(socketDescriptor);
     }
 }
 
-void database::newMessage(const qintptr descriptor, const QString &message)
+void database::newMessage(const qint64 descriptor, const QString &message)
 {
     QSqlQuery query;
     query.prepare( "INSERT INTO msgstory (descriptor, message, datetime) VALUES (:descriptor, :message, :datetime)" );
