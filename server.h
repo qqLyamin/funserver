@@ -108,6 +108,8 @@ public:
         for (auto thread : clientsThreads) {
             delete thread;
         }
+        delete db;
+        delete listenThread;
     }
 
 public slots:
