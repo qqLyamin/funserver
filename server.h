@@ -41,7 +41,6 @@ public slots:
     }
 
     void nextPendingConnectionRequest() {
-        qDebug() << "my_server::nextPendingConnectionRequest";
         emit nextPendingConnection(qserver.nextPendingConnection());
     }
 };
